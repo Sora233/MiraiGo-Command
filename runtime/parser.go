@@ -1,4 +1,4 @@
-package command
+package runtime
 
 import (
 	"github.com/Mrs4s/MiraiGo/message"
@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-type parser struct {
+type Parser struct {
 	Command string
 	Args    []string
 	Extra   []message.IMessageElement
 }
 
-func (p *parser) Parse(e []message.IMessageElement) {
+func (p *Parser) Parse(e []message.IMessageElement) {
 	var foundCommand = false
 	for _, element := range e {
 		if te, ok := element.(*message.TextElement); ok {
@@ -37,7 +37,7 @@ func (p *parser) Parse(e []message.IMessageElement) {
 	}
 }
 
-func (p *parser) FilterExtra(etype message.ElementType) []message.IMessageElement {
+func (p *Parser) FilterExtra(etype message.ElementType) []message.IMessageElement {
 	var result []message.IMessageElement
 	for _, e := range p.Extra {
 		if e.Type() == etype {
@@ -47,7 +47,7 @@ func (p *parser) FilterExtra(etype message.ElementType) []message.IMessageElemen
 	return result
 }
 
-func (p *parser) FilterExtraFunc(f func(e message.IMessageElement) bool) []message.IMessageElement {
+func (p *Parser) FilterExtraFunc(f func(e message.IMessageElement) bool) []message.IMessageElement {
 	var result []message.IMessageElement
 	for _, e := range p.Extra {
 		if f(e) {
@@ -57,12 +57,12 @@ func (p *parser) FilterExtraFunc(f func(e message.IMessageElement) bool) []messa
 	return result
 }
 
-func NewParser() *parser {
-	return new(parser)
+func NewParser() *Parser {
+	return new(Parser)
 }
 
-func NewParserFromMessage(e []message.IMessageElement) *parser {
-	p := new(parser)
+func NewParserFromMessage(e []message.IMessageElement) *Parser {
+	p := new(Parser)
 	p.Parse(e)
 	return p
 }
